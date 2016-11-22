@@ -25,10 +25,11 @@ names(xtrain)[2] <- "subject"
 merged <- rbind(xtest,xtrain)
 
 meanstd <- merged[,grep("mean|std",names(merged))]
+meanstd <- cbind(subject=merged$subject, activitylabel=merged$activitylabel, meanstd)
 
-activitygroup <- merged %>% group_by(activitylabel) %>% summarise_each(funs(mean))
+activitygroup <- meanstd %>% group_by(activitylabel) %>% summarise_each(funs(mean))
 activitygroup$subject <- NA
-subjectgroup <- merged %>% group_by(subject) %>% summarise_each(funs(mean))
+subjectgroup <- meanstd %>% group_by(subject) %>% summarise_each(funs(mean))
 subjectgroup$activitylabel <- NA
 
 both <- rbind(activitygroup, subjectgroup)
